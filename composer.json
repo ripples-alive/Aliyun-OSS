@@ -1,0 +1,20 @@
+{
+    "name": "ripples/aliyun-oss",
+    "description": "Wrap for Aliyun OSS SDK and make it more easy to use.",
+    "type": "library",
+    "license": "GPL",
+    "keywords": ["aliyun", "oss"],
+    "homepage": "https://github.com/JayvicWen/Aliyun-OSS",
+    "authors": [
+        {
+            "name": "Ripples",
+            "email": "w@q2zy.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Ripples\\Aliyun\\": "src/"
+        }
+    }
+}
