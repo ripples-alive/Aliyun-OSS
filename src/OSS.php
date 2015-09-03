@@ -21,6 +21,11 @@ class OSS
      */
     protected $external_client;
 
+    /**
+     * @var Array Extra headers that is valid in put operation.
+     */
+    protected $put_headers = ['Content-Type', 'Cache-Control', 'Content-Disposition', 'Content-Encoding', 'Content-MD5', 'Expires'];
+
     public function __construct($key, $secret, $external_endpoint = NULL, $internal_endpoint = NULL)
     {
         if (empty($external_endpoint)) {
@@ -101,8 +106,48 @@ class OSS
         return $res->header;
     }
 
+    /**
+     * Set the headers of object, discard all old headers.
+     *
+     * @param $bucket
+     * @param $key
+     * @param $headers
+     * @param bool|true $internal
+     *
+     * @return array
+     */
+    public function setMeta($bucket, $key, $headers, $internal = true)
+    {
+        return $this->copyObject($bucket, $key, $bucket, $key, $headers, $internal);
+    }
+
+    /**
+     * Update the headers based on the old headers.
+     * Be cautious to use this function. I'm not sure it's the right way.
+     *
+     * @param $bucket
+     * @param $key
+     * @param $headers
+     * @param bool|true $internal
+     *
+     * @return array
+     */
     public function modifyMeta($bucket, $key, $headers, $internal = true)
     {
+        // Append original headers.
+        $original_headers = $this->getMeta($bucket, $key, $internal);
+        foreach ($original_headers as $header_key => $header_value) {
+            if (substr($header_key, 0, 6) === 'x-oss-') {
+                $headers[$header_key] = $header_value;
+            }
+        }
+        foreach ($this->put_headers as $header_key) {
+            $lower_key = strtolower($header_key);
+            if (array_key_exists($lower_key, $original_headers)) {
+                $headers[$header_key] = $original_headers[$lower_key];
+            }
+        }
+
         return $this->copyObject($bucket, $key, $bucket, $key, $headers, $internal);
     }
 

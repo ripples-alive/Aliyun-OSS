@@ -29,10 +29,20 @@ echo $oss->getObject($bucket, $key1);
 echo "\n";
 
 $oss->putObjectFromFile($bucket, $key2, $tmp, ['Content-Type'=>'text/plain']);
-$oss->copyObject($bucket, $key1, $bucket, $key3);
-$oss->modifyMeta($bucket, $key3, ['Content-Type' => 'text/html']);
 unlink($tmp);
 
+$oss->copyObject($bucket, $key1, $bucket, $key3, [
+    'x-oss-metadata-directive' => 'REPLACE',
+    'Content-Type' => 'text/html',
+]);
+echo $oss->getMeta($bucket, $key3)['content-type'];
+echo "\n";
+
+$oss->modifyMeta($bucket, $key3, ['x-oss-meta-user-data' => 'This-is-user-meta-data.']);
+echo $oss->getMeta($bucket, $key3)['content-type'];
+echo "\n";
+
+$oss->setMeta($bucket, $key3, ['x-oss-meta-user-data' => 'This-is-user-meta-data.']);
 echo $oss->getMeta($bucket, $key3)['content-type'];
 echo "\n";
 

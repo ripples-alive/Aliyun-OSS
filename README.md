@@ -25,5 +25,14 @@ We use the value of external endpoint as the default value of internal endpoint.
 So if you don't want to use two endpoints, just omit the internal endpoint when constructing.
 Then, no matter what parameter you use when call the methods, we will all use the external endpoint.
 
+> If you want to update meta data when copy file, remember to set `x-oss-metadata-directive` header to `REPLACE`.
+> 
+> Be cautious when update meta data.
+> Assume that the init headers are `['a' => 1, 'b' => 2]`.
+> 
+> After `modifyMeta('bucket', 'key', ['b' => 3])`, the headers would be `['a' => 1, 'b' => 3]`.
+> 
+> After `setMeta('bucket', 'key', ['b' => 3])`, the headers would be `['b' => 3]`.
+
 ## LICENSE
 GPL
