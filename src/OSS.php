@@ -14,17 +14,18 @@ class OSS
     /**
      * @var ALIOSS Internal client for OSS.
      */
-    protected $internal_client;
+    public $internal_client;
 
     /**
      * @var ALIOSS External client for OSS.
      */
-    protected $external_client;
+    public $external_client;
 
     /**
      * @var Array Extra headers that is valid in put operation.
      */
-    protected $put_headers = ['Content-Type', 'Cache-Control', 'Content-Disposition', 'Content-Encoding', 'Content-MD5', 'Expires'];
+    protected $put_headers = ['Content-Type', 'Cache-Control', 'Content-Disposition', 'Content-Encoding',
+        'Content-Language', 'Content-MD5', 'Expires'];
 
     public function __construct($key, $secret, $external_endpoint = NULL, $internal_endpoint = NULL)
     {
