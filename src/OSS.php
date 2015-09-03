@@ -191,7 +191,7 @@ class OSS
 
     protected function assertOK(ResponseCore $response) {
         if (!$response->isOK()) {
-            throw new OSS_Exception('Operation failed.');
+            throw new OSS_Exception('Operation failed: ' . $response->body);
         }
         return $response;
     }
