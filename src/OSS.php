@@ -34,22 +34,22 @@ class OSS
         $this->internal_client = new ALIOSS($key, $secret, $internal_endpoint);
     }
 
-    public function signGetUrl($bucket, $key, $timeout = 60, $internal = false)
+    public function signGetUrl($bucket, $key, $timeout = 60, $headers = null, $internal = false)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->get_sign_url($bucket, $key, $timeout);
+        return $client->get_sign_url($bucket, $key, $timeout, $headers);
     }
 
-    public function signPutUrl($bucket, $key, $timeout = 60, $internal = false)
+    public function signPutUrl($bucket, $key, $timeout = 60, $headers = null, $internal = false)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->presign_url($bucket, $key, $timeout, ALIOSS::OSS_HTTP_PUT);
+        return $client->presign_url($bucket, $key, $timeout, ALIOSS::OSS_HTTP_PUT, $headers);
     }
 
-    public function signUrl($bucket, $key, $timeout = 60, $method = ALIOSS::OSS_HTTP_GET, $internal = false)
+    public function signUrl($bucket, $key, $timeout = 60, $method = ALIOSS::OSS_HTTP_GET, $headers = null, $internal = false)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->presign_url($bucket, $key, $timeout, $method);
+        return $client->presign_url($bucket, $key, $timeout, $method, $headers);
     }
 
     public function getObject($bucket, $key, $internal = true)

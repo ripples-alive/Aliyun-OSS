@@ -1,12 +1,13 @@
 <?php
 
 require_once dirname(__FILE__) . '/../src/OSS.php';
+require_once 'config.php';
 
 use Ripples\Aliyun\OSS;
 
-$oss = new OSS('your-access-key-id', 'your-access-key-secret', 'your-oss-endpoint');
+$oss = new OSS(ACCESS_KEY_ID, ACCESS_KEY_SECRET, ENDPOINT);
 
-$bucket = 'your-bucket';
+$bucket = BUCKET;
 $key1 = 'test-key1';
 $key2 = 'test-key2';
 $key3 = 'test-key3';
