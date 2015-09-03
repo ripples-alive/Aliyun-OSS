@@ -22,7 +22,12 @@ class OSS
     public $external_client;
 
     /**
-     * @var Array Extra headers that is valid in put operation.
+     * @var array The response status that are allowed for operation.
+     */
+    public $ok_status = [200, 201, 204, 206];
+
+    /**
+     * @var array Extra headers that is valid in put operation.
      */
     protected $put_headers = ['Content-Type', 'Cache-Control', 'Content-Disposition', 'Content-Encoding',
         'Content-Language', 'Content-MD5', 'Expires'];
@@ -191,7 +196,7 @@ class OSS
     }
 
     protected function assertOK(ResponseCore $response) {
-        if (!$response->isOK()) {
+        if (!$response->isOK($this->ok_status)) {
             throw new OSS_Exception('Operation failed: ' . $response->body);
         }
         return $response;

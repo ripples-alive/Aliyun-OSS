@@ -34,6 +34,8 @@ Then, no matter what parameter you use when call the methods, we will all use th
 > 
 > After `setMeta('bucket', 'key', ['b' => 3])`, the headers would be `['b' => 3]`.
 
+Notice that we'll automatic check the response status. And you can modify the attribute `ok_status` to intervene it.
+
 ##### Finally, we define the clients as public. So it's ok to call the method of Aliyun SDK directly.
 
 ## LICENSE
