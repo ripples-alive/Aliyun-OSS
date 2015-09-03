@@ -6,6 +6,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'sdk' . DIRECTORY_SEPARAT
 
 use ALIOSS;
 use OSS_Exception;
+use ResponseCore;
 
 class OSS
 {
@@ -56,39 +57,48 @@ class OSS
     {
         $client = $internal ? $this->internal_client : $this->external_client;
         $res = $client->get_object($bucket, $key);
+        $this->assertOK($res);
         return $res->body;
     }
 
     public function getObjectToFile($bucket, $key, $file_path, $internal = true)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->get_object($bucket, $key, [ALIOSS::OSS_FILE_DOWNLOAD => $file_path]);
+        $res = $client->get_object($bucket, $key, [ALIOSS::OSS_FILE_DOWNLOAD => $file_path]);
+        $this->assertOK($res);
+        return $res->header;
     }
 
     public function putObject($bucket, $key, $content, $headers = null, $internal = true)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->upload_file_by_content($bucket, $key, [
+        $res = $client->upload_file_by_content($bucket, $key, [
             'content' => $content,
             'length' => strlen($content),
             ALIOSS::OSS_HEADERS => $headers,
         ]);
+        $this->assertOK($res);
+        return $res->header;
     }
 
     public function putObjectFromFile($bucket, $key, $file_path, $headers = null, $internal = true)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->upload_file_by_file($bucket, $key, $file_path, [
+        $res = $client->upload_file_by_file($bucket, $key, $file_path, [
             ALIOSS::OSS_HEADERS => $headers,
         ]);
+        $this->assertOK($res);
+        return $res->header;
     }
 
     public function copyObject($from_bucket, $from_object, $to_bucket, $to_object, $headers = null, $internal = true)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->copy_object($from_bucket, $from_object, $to_bucket, $to_object, [
+        $res = $client->copy_object($from_bucket, $from_object, $to_bucket, $to_object, [
             ALIOSS::OSS_HEADERS => $headers,
         ]);
+        $this->assertOK($res);
+        return $res->header;
     }
 
     public function modifyMeta($bucket, $key, $headers, $internal = true)
@@ -100,22 +110,24 @@ class OSS
     {
         $client = $internal ? $this->internal_client : $this->external_client;
         $res = $client->get_object_meta($bucket, $key);
-        if (!$res->isOK()) {
-            throw new OSS_Exception('Failed to get meta data.');
-        }
+        $this->assertOK($res);
         return $res->header;
     }
 
     public function deleteObject($bucket, $key, $internal = true)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->delete_object($bucket, $key);
+        $res = $client->delete_object($bucket, $key);
+        $this->assertOK($res);
+        return $res->header;
     }
 
     public function deleteObjects($bucket, $keys, $internal = true)
     {
         $client = $internal ? $this->internal_client : $this->external_client;
-        return $client->delete_objects($bucket, $keys);
+        $res = $client->delete_objects($bucket, $keys);
+        $this->assertOK($res);
+        return $res->header;
     }
 
     public function isObjectExists($bucket, $key, $internal = true)
@@ -130,6 +142,13 @@ class OSS
         // The program shouldn't be running here.
         // Default throw exception.
         throw new OSS_Exception('Unexpected return status.');
+    }
+
+    protected function assertOK(ResponseCore $response) {
+        if (!$response->isOK()) {
+            throw new OSS_Exception('Operation failed.');
+        }
+        return $response;
     }
 
 }
