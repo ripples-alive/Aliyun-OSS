@@ -2,7 +2,7 @@
     "name": "ripples/aliyun-oss",
     "description": "Wrap for Aliyun OSS SDK and make it more easy to use.",
     "type": "library",
-    "license": "GPL",
+    "license": "MIT",
     "keywords": ["aliyun", "oss"],
     "homepage": "https://github.com/JayvicWen/Aliyun-OSS",
     "authors": [
